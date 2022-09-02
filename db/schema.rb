@@ -21,9 +21,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_02_132711) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.float "current_balance", default: 0.0, null: false
+    t.float "old_balance", default: 0.0, null: false
     t.float "new_balance", default: 0.0, null: false
-    t.string "type", null: false
+    t.string "transaction_type", null: false
     t.float "amount", default: 0.0, null: false
     t.bigint "user_id", null: false
     t.bigint "destination_account_id"

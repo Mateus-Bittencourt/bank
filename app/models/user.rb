@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :transactions
   acts_as_paranoid
 
   # Include default devise modules. Others available are:

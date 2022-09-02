@@ -1,0 +1,8 @@
+<div class="container">
+  <h2>Saque</h2>
+  <%= simple_form_for([@user, @transaction], method: :post, url: save_withdraw_path(current_user), data: { turbo: :false }) do |f| %>
+    <%= f.input :amount, label:"Valor" %>
+    <%= f.input :password, label:"Senha" %>
+    <%= f.button :submit, 'Sacar' %>
+  <% end %>
+</div>

@@ -1,0 +1,12 @@
+<div class="container">
+  <h2>Transferencia entre contas: </h2>
+  <%= simple_form_for([@user, @transaction], method: :post, url: transfer_between_accounts_path(current_user), data: { turbo: :false }) do |f| %>
+    <%= f.input :amount, label:"Quantia" %>
+    <%= f.simple_fields_for @destination_account do |da| %>
+      <%= da.input :account_number, label:"Conta Corrente" %>
+      <%= da.input :cpf, label:"CPF" %>
+    <% end %>
+    <%= f.input :password, label:"Senha" %>
+    <%= f.button :submit, 'Transferir' %>
+  <% end %>
+</div>

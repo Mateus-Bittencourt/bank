@@ -1,7 +1,31 @@
 <div class="container">
-  <h3>CPF <%= @user.cpf %></h3>
-  <h1>Bem vindo <%= @user.full_name %></h1>
-  <p>Saldo: <%= @user.balance %></p>
-  <%= @user.email %>
-  <h2>Conta: <%= @user.account_number %></h2>
+  <div class="row d-flex justify-content-center mt-5">
+    <div class="col-sm-12 col-lg-6">
+      <div class=" card" >
+        <div class="card-body">
+          <h2>Sua conta:</h2>
+          <h3>CPF <%= @user.cpf %></h3>
+          <h1>Bem vindo <%= @user.full_name %></h1>
+          <h2>Saldo: <%= @user.balance %></h2>
+          <%= @user.email %>
+          <h2>Conta: <%= @user.account_number %></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-lg-6">
+      <div class="card" >
+        <div class="card-body">
+          <h2>Transações:</h2>
+          <div class="container d-flex justify-content-center mt-5">
+            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+              <%= link_to "Depósito", deposit_path(current_user), class: "btn btn-dark" %>
+              <%= link_to "Saque", withdraw_path(current_user), class: "btn btn-dark" %>
+              <%= link_to "Transferência entre Contas", transfer_between_accounts_path(current_user), class: "btn btn-dark" %>
+              <a class="btn btn-dark">Solicitar Extrato Filtrando por Data</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
