@@ -76,3 +76,7 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+gem "pundit"
+
+gem 'paranoia', '~> 2.6'
