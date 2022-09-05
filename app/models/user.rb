@@ -8,6 +8,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   before_create do
-    self.account_number = User.last.account_number + 1 if User.count.positive?
+    self.account_number = "0000#{User.last.account_number.to_i + 1}" if User.count.positive?
   end
 end

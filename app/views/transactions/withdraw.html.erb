@@ -1,8 +1,11 @@
 <div class="container">
-  <h2>Saque</h2>
-  <%= simple_form_for([@user, @transaction], method: :post, url: save_withdraw_path(current_user), data: { turbo: :false }) do |f| %>
-    <%= f.input :amount, label:"Valor" %>
-    <%= f.input :password, label:"Senha" %>
-    <%= f.button :submit, 'Sacar' %>
-  <% end %>
+  <div class="card p-3 mt-5">
+    <h2>Saque</h2>
+    <%= simple_form_for([@user, @transaction], method: :post, url: save_withdraw_path(current_user), data: { turbo: :false }) do |f| %>
+      <%= f.input :amount, label:"Valor" %>
+      <%= f.input :password, label:"Senha" %>
+      <%= f.button :submit, 'Sacar', class:'btn btn-outline-dark border-pattern' %>
+      <%= link_to 'Voltar', user_path(current_user), class:'btn btn-outline-dark border-pattern' %>
+    <% end %>
+  </div>
 </div>

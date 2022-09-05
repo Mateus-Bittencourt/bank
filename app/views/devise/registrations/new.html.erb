@@ -1,35 +1,46 @@
 <div class="container">
-  <h2>Criar Conta Corrente</h2>
-  <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: :false }) do |f| %>
-    <%= f.error_notification %>
-    <div class="form-inputs">
-      <%= f.input :full_name,
+  <div class="card p-3 mt-5">
+    <h2>Criar Conta Corrente</h2>
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: :false }) do |f| %>
+      <%= f.error_notification %>
+      <div class="form-inputs">
+        <%= f.input :full_name,
                 required: true,
                 autofocus: true,
-                input_html: { autocomplete: "full_name" }%>
-      <%= f.input :cpf,
+                input_html: { autocomplete: "full_name" },
+                label: 'Nome completo' %>
+        <%= f.input :cpf,
                 required: true,
-                input_html: { autocomplete: "cpf" }%>
-      <%= f.input :email,
+                input_html: { autocomplete: "cpf" },
+                label: 'CPF'%>
+        <%= f.input :email,
                 required: true,
-                input_html: { autocomplete: "email" }%>
-      <%= f.input :phone_number,
+                input_html: { autocomplete: "email" },
+                label: 'e-mail' %>
+        <%= f.input :phone_number,
                 required: false,
-                input_html: { autocomplete: "phone_number" }%>
-      <%= f.input :address,
+                input_html: { autocomplete: "phone_number" },
+                label: 'Telefone' %>
+        <%= f.input :address,
                 required: false,
-                input_html: { autocomplete: "address" }%>
-      <%= f.input :password,
+                input_html: { autocomplete: "address" },
+                label: 'Endereço' %>
+        <%= f.input :password,
                 required: true,
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
-      <%= f.input :password_confirmation,
+                hint: ("no mínimo #{@minimum_password_length} caracteres" if @minimum_password_length),
+                input_html: { autocomplete: "new-password" },
+                label: 'Senha' %>
+        <%= f.input :password_confirmation,
                 required: true,
-                input_html: { autocomplete: "new-password" } %>
-    </div>
-    <div class="form-actions">
-      <%= f.button :submit, "Cadastrar" %>
-    </div>
-  <% end %>
-  <%= render "devise/shared/links" %>
+                input_html: { autocomplete: "new-password" },
+                label: 'Senha' %>
+      </div>
+      <div class="form-actions">
+        <%= f.button :submit, "Cadastrar", class:'btn btn-outline-dark border-pattern'%>
+      </div>
+    <% end %>
+  </div>
+  <div class="container mb-3">
+    <%= render "devise/shared/links" %>
+  </div>
 </div>

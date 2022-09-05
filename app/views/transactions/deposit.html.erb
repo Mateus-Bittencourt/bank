@@ -1,8 +1,11 @@
 <div class="container">
-  <h2>Deposito</h2>
-   <%= simple_form_for([@user, @transaction], method: :post, url: save_deposit_path(current_user), data: { turbo: :false }) do |f| %>
-    <%= f.input :amount %>
-    <%= f.input :password %>
-    <%= f.button :submit, 'Depositar' %>
-  <% end %>
+  <div class="card p-3 mt-5">
+    <h2>Deposito</h2>
+    <%= simple_form_for([@user, @transaction], method: :post, url: save_deposit_path(current_user), data: { turbo: :false }) do |f| %>
+      <%= f.input :amount, required: true, label:'Quantia'%>
+      <%= f.input :password, required: true, label:'Senha'%>
+      <%= f.button :submit, 'Depositar', class:'btn btn-outline-dark border-pattern' %>
+      <%= link_to 'Voltar', user_path(current_user), class:'btn btn-outline-dark border-pattern' %>
+    <% end %>
+  </div>
 </div>

@@ -1,7 +1,10 @@
 <div class="container">
+  <div class="card p-3 mt-5">
   <h2>Encerrar sua conta</h2>
   <%= simple_form_for(@user, as: :user, method: :delete, url: user_soft_destroy_path(current_user), data: { turbo: :false }) do |f| %>
-    <%= f.input :password %>
-    <%= f.button :submit, 'Encerrar' %>
+    <%= f.input :password, label: 'Senha' %>
+    <%= f.button :submit, 'Encerrar', class:'btn btn-outline-dark border-pattern' %>
+      <%= link_to 'Voltar', user_path(current_user), class:'btn btn-outline-dark border-pattern' %>
   <% end %>
+</div>
 </div>

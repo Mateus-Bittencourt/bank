@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   post 'account/:account_number/transactions/withdraw', to: 'transactions#save_withdraw', as: :save_withdraw
   get 'account/:account_number/transactions/transfer_between_accounts', to: 'transactions#transfer_between_accounts', as: :transfer_between_accounts
   post 'account/:account_number/transactions/transfer_between_accounts', to: 'transactions#save_transfer_between_accounts', as: :save_transfer_between_accounts
+  # get 'account/:account_number/transactions/account_statement', to: 'transactions#account_statement', as: :account_statement
+
+  resources :transactions, only: :index
   # Defines the root path route ("/")
   # root "articles#index"
 end

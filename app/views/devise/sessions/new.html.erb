@@ -1,5 +1,6 @@
 <div class="container">
-  <h2>Entrar</h2>
+  <div class="card p-3 mt-5">
+  <h2>Login</h2>
   <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: :false }) do |f| %>
     <div class="form-inputs">
       <%= f.input :cpf,
@@ -15,8 +16,11 @@
       <%# <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
     </div>
     <div class="form-actions">
-      <%= f.button :submit, "Entrar" %>
+      <%= f.button :submit, "Entrar", class:'btn btn-outline-dark border-pattern' %>
     </div>
   <% end %>
+  </div>
+  <div class="container">
   <%= render "devise/shared/links" %>
+  </div>
 </div>

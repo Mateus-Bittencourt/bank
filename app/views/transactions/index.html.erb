@@ -1,0 +1,63 @@
+<div class="container">
+  <div class="row justify-content-center pt-4">
+    <div class="col-sm-8 mb-3">
+      <%= form_with url: transactions_path, method: :get, class: "d-flex", remote: true do |form| %>
+        <%= form.date_field :init_date, class: "form-control", placeholder: "Data inicial", id: 'border-radius-input-init-date' %>
+        <%= form.date_field :final_date, class: "form-control", placeholder: "Data final", id: 'border-radius-input-final-date' %>
+        <%= submit_tag "Filtrar", class:'btn btn-outline-dark border-pattern', id: 'border-radius-button-date'%>
+      <% end %>
+      <div id="transactions" class="pt-3 mt-3">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">R$</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @transactions.each do |transaction| %>
+              <% if transaction.user_id == current_user.id %>
+                <tr class="table-warning">
+                  <td colspan="2">Data: <%= transaction.created_at %></td>
+                </tr>
+                <tr>
+                  <td>Saldo anterior:</td>
+                  <td><%= transaction.old_balance %></td>
+                </tr>
+                <% if transaction.transaction_type == 'Depósito' %>
+                  <tr style="color: #00C04B;">
+                  <% else %>
+                    <tr style="color: #ff0000;">
+                    <% end %>
+                    <td><%= transaction.transaction_type %>:</td>
+                    <td><%= transaction.amount %></td>
+                  </tr>
+                  <tr>
+                    <td>Saldo:</td>
+                    <td><%= transaction.new_balance %></td>
+                  </tr>
+                <% else %>
+                  <tr class="table-warning">
+                    <td colspan="2">Data: <%= transaction.created_at %></td>
+                  </tr>
+                  <tr>
+                    <td>Saldo anterior:</td>
+                    <td><%= transaction.destination_account_old_balance %></td>
+                  </tr>
+                  <tr style="color: #00C04B;">
+                    <td><%= transaction.transaction_type %>:</td>
+                    <td><%= transaction.amount %></td>
+                  </tr>
+                  <tr>
+                    <td>Saldo:</td>
+                    <td><%= transaction.destination_account_new_balance %></td>
+                  </tr>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <%= link_to 'Voltar', user_path(current_user), class:'btn btn-outline-dark border-pattern mt-3 btn-sm' %>
+      </div>
+    </div>
+  </div>

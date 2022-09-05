@@ -1,12 +1,15 @@
 <div class="container">
-  <h2>Transferencia entre contas: </h2>
-  <%= simple_form_for([@user, @transaction], method: :post, url: transfer_between_accounts_path(current_user), data: { turbo: :false }) do |f| %>
-    <%= f.input :amount, label:"Quantia" %>
-    <%= f.simple_fields_for @destination_account do |da| %>
-      <%= da.input :account_number, label:"Conta Corrente" %>
-      <%= da.input :cpf, label:"CPF" %>
+  <div class="card p-3 mt-5">
+    <h2>Transferencia entre contas: </h2>
+    <%= simple_form_for([@user, @transaction], method: :post, url: transfer_between_accounts_path(current_user), data: { turbo: :false }) do |f| %>
+      <%= f.input :amount, label:"Quantia" %>
+      <%= f.simple_fields_for @destination_account do |da| %>
+        <%= da.input :account_number, label:"Conta Corrente" %>
+        <%= da.input :cpf, label:"CPF" %>
+      <% end %>
+      <%= f.input :password, label:"Senha" %>
+      <%= f.button :submit, 'Transferir', class:'btn btn-outline-dark border-pattern' %>
+      <%= link_to 'Voltar', user_path(current_user), class:'btn btn-outline-dark border-pattern' %>
     <% end %>
-    <%= f.input :password, label:"Senha" %>
-    <%= f.button :submit, 'Transferir' %>
-  <% end %>
+  </div>
 </div>

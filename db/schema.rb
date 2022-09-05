@@ -14,15 +14,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_02_132711) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "bank_accounts", force: :cascade do |t|
-    t.float "balance", default: 0.0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "transactions", force: :cascade do |t|
+    t.float "bank_fee", default: 0.0, null: false
     t.float "old_balance", default: 0.0, null: false
     t.float "new_balance", default: 0.0, null: false
+    t.float "destination_account_old_balance"
+    t.float "destination_account_new_balance"
     t.string "transaction_type", null: false
     t.float "amount", default: 0.0, null: false
     t.bigint "user_id", null: false
@@ -45,7 +42,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_02_132711) do
     t.string "full_name", null: false
     t.string "address"
     t.string "phone_number"
-    t.integer "account_number", default: 0, null: false
+    t.string "account_number", default: "00000", null: false
     t.string "cpf", null: false
     t.datetime "deleted_at"
     t.index ["account_number"], name: "index_users_on_account_number"
