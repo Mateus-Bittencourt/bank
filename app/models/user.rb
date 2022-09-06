@@ -10,4 +10,12 @@ class User < ApplicationRecord
   before_create do
     self.account_number = "0000#{User.last.account_number.to_i + 1}" if User.count.positive?
   end
+
+  validates :cpf, uniqueness: true
+  validate :validate_cpf
+  validates :validate_cpf, length: { maximum: 14 }
+
+  def validate_cpf
+    errors.add(:cpf, "Inválido") unless cpf.valid_cpf?
+  end
 end

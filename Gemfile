@@ -80,3 +80,4 @@ end
 gem "pundit"
 
 gem 'paranoia', '~> 2.6'
+gem 'cpf_utils'
