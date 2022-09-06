@@ -1,13 +1,13 @@
 <div class="container">
   <div class="card p-3 mt-5">
   <h2>Login</h2>
-  <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: :false }) do |f| %>
+  <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: :false,  controller: "mask"}) do |f| %>
     <div class="form-inputs">
       <%= f.input :cpf,
                 required: false,
                 autofocus: true,
                 input_html: { autocomplete: "cpf" },
-                label: 'CPF' %>
+                label: 'CPF', input_html: { data: { action: "input->mask#inputmask", mask:"cpf" }, maxlength: 14 } %>
 
       <%= f.input :password,
                 required: false,
