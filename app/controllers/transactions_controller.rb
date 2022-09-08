@@ -1,8 +1,10 @@
 class TransactionsController < ApplicationController
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
   # before_action :set_user_password_amount, only: %i[save_deposit save_withdraw save_transfer_between_accounts]
 
   def index
+    @transaction = Transaction.new(user: current_user)
+    authorize @transaction
     if params[:init_date].present? && params[:final_date].present?
       sql_query = '(user_id = :query OR destination_account_id = :query) AND created_at >= :init_date AND created_at <= :final_date'
       init_date = DateTime.parse(params[:init_date])
@@ -28,6 +30,7 @@ class TransactionsController < ApplicationController
   def deposit
     @user = current_user
     @transaction = Transaction.new
+    authorize @transaction
   end
 
   def save_deposit
@@ -35,9 +38,12 @@ class TransactionsController < ApplicationController
     password = transaction_params[:password]
     amount = transaction_params[:amount].to_f
     new_balance = @user.balance + amount
+    @transaction = Transaction.new(transaction_type: 'Depósito', amount:, user: @user,
+                                   old_balance: @user.balance, new_balance:)
+
+    authorize @transaction
     if current_user.valid_password?(password)
-      @transaction = Transaction.new(transaction_type: 'Depósito', amount:, user: @user,
-                                     old_balance: @user.balance, new_balance:)
+
       @user.balance = new_balance
       if @transaction.save && @user.save
         redirect_to root_path, notice: 'Depósito realizado com sucesso'
@@ -52,18 +58,21 @@ class TransactionsController < ApplicationController
   def withdraw
     @user = current_user
     @transaction = Transaction.new
+    authorize @transaction
   end
 
   def save_withdraw
+    @transaction = Transaction.new
     @user = current_user
     password = transaction_params[:password]
     amount = transaction_params[:amount].to_f
+    new_balance = @user.balance - amount
+    @transaction = Transaction.new(transaction_type: 'Saque', amount:, user: @user,
+                                   old_balance: @user.balance, new_balance:)
+    authorize @transaction
     if amount <= @user.balance
-      new_balance = @user.balance - amount
 
       if current_user.valid_password?(password)
-        @transaction = Transaction.new(transaction_type: 'Saque', amount:, user: @user,
-                                       old_balance: @user.balance, new_balance:)
         @user.balance = new_balance
         if @transaction.save && @user.save
           redirect_to root_path, notice: 'Saque realizado com sucesso'
@@ -82,10 +91,13 @@ class TransactionsController < ApplicationController
     @user = current_user
     @transaction = Transaction.new
     @destination_account = User.new
+    authorize @transaction
   end
 
   def save_transfer_between_accounts
     @user = current_user
+    @transaction = Transaction.new(user: @user)
+    authorize @transaction
     password = transaction_params[:password]
     amount = transaction_params[:amount].to_f
     if @destination_account = User.find_by(cpf: destination_account_params[:cpf])

@@ -1,10 +1,12 @@
 class UsersController < ApplicationController
   def show
     @user = current_user
+    authorize @user
   end
 
   def confirmation_destroy
     @user = current_user
+    authorize @user
   end
 
   def destroy
