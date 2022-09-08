@@ -1,11 +1,11 @@
 <div class="container">
   <div class="card p-3 mt-5">
     <h2>Transferencia entre contas: </h2>
-    <%= simple_form_for([@user, @transaction], method: :post, url: transfer_between_accounts_path(current_user), data: { turbo: :false }) do |f| %>
+    <%= simple_form_for([@user, @transaction], method: :post, url: transfer_between_accounts_path(current_user), data: { turbo: :false,  controller: "mask"}) do |f| %>
       <%= f.input :amount, label:"Quantia" %>
       <%= f.simple_fields_for @destination_account do |da| %>
         <%= da.input :account_number, label:"Conta Corrente" %>
-        <%= da.input :cpf, label:"CPF" %>
+        <%= da.input :cpf, label:"CPF", input_html: { data: { action: "input->mask#inputmask", mask:"cpf" }, maxlength: 14 } %>
       <% end %>
       <%= f.input :password, label:"Senha" %>
       <%= f.button :submit, 'Transferir', class:'btn btn-outline-dark border-pattern' %>
