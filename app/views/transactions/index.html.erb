@@ -22,7 +22,7 @@
                 </tr>
                 <tr>
                   <td>Saldo anterior:</td>
-                  <td><%= transaction.old_balance %></td>
+                  <td><%= number_to_currency(transaction.old_balance, :unit => "", :separator => ",", :delimiter => ".") %></td>
                 </tr>
                 <% if transaction.transaction_type == 'Depósito' %>
                   <tr style="color: #00C04B;">
@@ -30,11 +30,11 @@
                     <tr style="color: #ff0000;">
                     <% end %>
                     <td><%= transaction.transaction_type %>:</td>
-                    <td><%= transaction.amount %></td>
+                    <td><%= number_to_currency(transaction.amount, :unit => "", :separator => ",", :delimiter => ".") %></td>
                   </tr>
                   <tr>
                     <td>Saldo:</td>
-                    <td><%= transaction.new_balance %></td>
+                    <td><%= number_to_currency(transaction.new_balance, :unit => "", :separator => ",", :delimiter => ".") %></td>
                   </tr>
                 <% else %>
                   <tr class="table-warning">
@@ -42,15 +42,15 @@
                   </tr>
                   <tr>
                     <td>Saldo anterior:</td>
-                    <td><%= transaction.destination_account_old_balance %></td>
+                    <td><%= number_to_currency(transaction.destination_account_old_balance, :unit => "", :separator => ",", :delimiter => ".") %></td>
                   </tr>
                   <tr style="color: #00C04B;">
                     <td><%= transaction.transaction_type %>:</td>
-                    <td><%= transaction.amount %></td>
+                    <td><%= number_to_currency(transaction.amount, :unit => "", :separator => ",", :delimiter => ".") %></td>
                   </tr>
                   <tr>
                     <td>Saldo:</td>
-                    <td><%= transaction.destination_account_new_balance %></td>
+                    <td><%= number_to_currency(transaction.destination_account_new_balance, :unit => "", :separator => ",", :delimiter => ".") %></td>
                   </tr>
                 <% end %>
               <% end %>
