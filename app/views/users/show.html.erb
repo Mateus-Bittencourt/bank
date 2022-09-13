@@ -11,7 +11,7 @@
 
 
           <div class="card-saldo">
-          <h3><strong>Saldo: R$ <%= @user.balance %></strong></h3>
+          <h3><strong>Saldo: <%= number_to_currency(@user.balance, :unit => "R$ ", :separator => ",", :delimiter => ".") %></strong></h3>
           </div>
         </div>
       </div>

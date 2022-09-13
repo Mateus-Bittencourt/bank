@@ -6,24 +6,26 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.new(user: current_user)
     authorize @transaction
     if params[:init_date].present? && params[:final_date].present?
-      sql_query = '(user_id = :query OR destination_account_id = :query) AND created_at >= :init_date AND created_at <= :final_date'
-      init_date = DateTime.parse(params[:init_date])
-      final_date = DateTime.parse("#{params[:final_date]} 23:59:59")
+      sql_query = '(user_id = :query OR destination_account_id = :query) AND (created_at >= :init_date AND created_at <= :final_date)'
+      init_date = Time.zone.parse(params[:init_date]).beginning_of_day
+      final_date = Time.zone.parse(params[:final_date]).end_of_day
+      # raise
       @transactions = Transaction.where(sql_query, query: current_user.id, init_date:, final_date:).order(:created_at)
     elsif params[:init_date].present? && params[:final_date] == ""
       sql_query = '(user_id = :query OR destination_account_id = :query) AND created_at >= :init_date'
-      init_date = DateTime.parse(params[:init_date])
+      init_date = Time.zone.parse(params[:init_date]).beginning_of_day
 
       @transactions = Transaction.where(sql_query, query: current_user.id, init_date:).order(:created_at)
     elsif params[:init_date] == "" && params[:final_date].present?
-      sql_query = '(user_id = :query OR destination_account_id = :query) AND created_at <= :final_date'
-      final_date = DateTime.parse("#{params[:final_date]} 23:59:59")
+      sql_query = '(user_id = :query OR destination_account_id = :query) AND created_at < :final_date'
+      final_date = Time.zone.parse(params[:final_date]).end_of_day
 
       @transactions = Transaction.where(sql_query, query: current_user.id, final_date:).order(:created_at)
     else
       sql_query = 'user_id = :query OR destination_account_id = :query'
 
       @transactions = Transaction.where(sql_query, query: current_user.id).order(:created_at)
+      # raise
     end
   end
 
@@ -42,16 +44,20 @@ class TransactionsController < ApplicationController
                                    old_balance: @user.balance, new_balance:)
 
     authorize @transaction
-    if current_user.valid_password?(password)
+    if amount > 0
+      if current_user.valid_password?(password)
 
-      @user.balance = new_balance
-      if @transaction.save && @user.save
-        redirect_to root_path, notice: 'Depósito realizado com sucesso'
+        @user.balance = new_balance
+        if @transaction.save && @user.save
+          redirect_to root_path, notice: 'Depósito realizado com sucesso'
+        else
+          redirect_to deposit_path(current_user), notice: "Falha ao salvar"
+        end
       else
-        redirect_to deposit_path(current_user), notice: "Falha ao salvar"
+        redirect_to deposit_path(current_user), notice: "Senha incorreta"
       end
     else
-      redirect_to deposit_path(current_user), notice: "Senha incorreta"
+      redirect_to deposit_path(current_user), notice: "Quantia inválida"
     end
   end
 
@@ -70,20 +76,24 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.new(transaction_type: 'Saque', amount:, user: @user,
                                    old_balance: @user.balance, new_balance:)
     authorize @transaction
-    if amount <= @user.balance
+    if amount > 0
+      if amount <= @user.balance
 
-      if current_user.valid_password?(password)
-        @user.balance = new_balance
-        if @transaction.save && @user.save
-          redirect_to root_path, notice: 'Saque realizado com sucesso'
+        if current_user.valid_password?(password)
+          @user.balance = new_balance
+          if @transaction.save && @user.save
+            redirect_to root_path, notice: 'Saque realizado com sucesso'
+          else
+            redirect_to withdraw_path(current_user), notice: "Falha ao salvar"
+          end
         else
-          redirect_to withdraw_path(current_user), notice: "Falha ao salvar"
+          redirect_to withdraw_path(current_user), notice: "Senha incorreta"
         end
       else
-        redirect_to withdraw_path(current_user), notice: "Senha incorreta"
+        redirect_to withdraw_path(current_user), notice: "Saldo insuficiente"
       end
     else
-      redirect_to withdraw_path(current_user), notice: "Saldo insuficiente"
+      redirect_to withdraw_path(current_user), notice: "Quantia inválida"
     end
   end
 
@@ -100,34 +110,38 @@ class TransactionsController < ApplicationController
     authorize @transaction
     password = transaction_params[:password]
     amount = transaction_params[:amount].to_f
-    if @destination_account = User.find_by(cpf: destination_account_params[:cpf])
-      if current_user.valid_password?(password)
-        bank_fee = calc_bank_fee(amount)
-        new_balance = @user.balance - amount - bank_fee
-        if new_balance >= 0
-          if @destination_account.account_number == destination_account_params[:account_number]
-            @transaction = Transaction.new(transaction_type: 'Transferência entre Contas', amount:, user: @user,
-                                           old_balance: @user.balance, new_balance:, destination_account_id: @destination_account.id, bank_fee:,
-                                           destination_account_old_balance: @destination_account.balance, destination_account_new_balance: @destination_account.balance + amount)
-            @user.balance = new_balance
-            @destination_account.balance += amount
-            if @transaction.save && @user.save && @destination_account.save
-              redirect_to root_path, notice: 'Transferência realizado com sucesso'
+    if amount > 0
+      if @destination_account = User.find_by(cpf: destination_account_params[:cpf])
+        if current_user.valid_password?(password)
+          bank_fee = calc_bank_fee(amount)
+          new_balance = @user.balance - amount - bank_fee
+          if new_balance >= 0
+            if @destination_account.account_number == destination_account_params[:account_number]
+              @transaction = Transaction.new(transaction_type: 'Transferência entre Contas', amount:, user: @user,
+                                             old_balance: @user.balance, new_balance:, destination_account_id: @destination_account.id, bank_fee:,
+                                             destination_account_old_balance: @destination_account.balance, destination_account_new_balance: @destination_account.balance + amount)
+              @user.balance = new_balance
+              @destination_account.balance += amount
+              if @transaction.save && @user.save && @destination_account.save
+                redirect_to root_path, notice: 'Transferência realizado com sucesso'
+              else
+                redirect_to transfer_between_accounts_path(current_user), notice: "Falha ao salvar"
+              end
             else
-              redirect_to transfer_between_accounts_path(current_user), notice: "Falha ao salvar"
+              redirect_to transfer_between_accounts_path(current_user),
+                          notice: "Número da conta não corresponde com o numero do CPF"
             end
           else
-            redirect_to transfer_between_accounts_path(current_user),
-                        notice: "Número da conta não corresponde com o numero do CPF"
+            redirect_to transfer_between_accounts_path(current_user), notice: "Saldo insuficiente"
           end
         else
-          redirect_to transfer_between_accounts_path(current_user), notice: "Saldo insuficiente"
+          redirect_to transfer_between_accounts_path(current_user), notice: "Senha incorreta"
         end
       else
-        redirect_to transfer_between_accounts_path(current_user), notice: "Senha incorreta"
+        redirect_to transfer_between_accounts_path(current_user), notice: "CPF inválido"
       end
     else
-      redirect_to transfer_between_accounts_path(current_user), notice: "CPF inválido"
+      redirect_to transfer_between_accounts_path(current_user), notice: "Quantia inválida"
     end
   end
 

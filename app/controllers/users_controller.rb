@@ -12,6 +12,7 @@ class UsersController < ApplicationController
   def destroy
     @user = current_user
     password = user_password
+    authorize @user
     if current_user.valid_password?(password[:password])
       @user.destroy
       redirect_to root_path, notice: 'Sua conta foi encerrada com sucesso'

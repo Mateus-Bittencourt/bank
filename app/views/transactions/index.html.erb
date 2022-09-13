@@ -18,7 +18,7 @@
             <% @transactions.each do |transaction| %>
               <% if transaction.user_id == current_user.id %>
                 <tr class="table-warning">
-                  <td colspan="2">Data: <%= transaction.created_at %></td>
+                  <td colspan="2">Data: <%= transaction.created_at.strftime("%d/%m/%Y %k:%M") %></td>
                 </tr>
                 <tr>
                   <td>Saldo anterior:</td>
@@ -38,7 +38,7 @@
                   </tr>
                 <% else %>
                   <tr class="table-warning">
-                    <td colspan="2">Data: <%= transaction.created_at %></td>
+                    <td colspan="2">Data: <%= transaction.created_at.strftime("%d/%m/%Y %k:%M") %></td>
                   </tr>
                   <tr>
                     <td>Saldo anterior:</td>
