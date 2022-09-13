@@ -18,12 +18,13 @@
             <% @transactions.each do |transaction| %>
               <% if transaction.user_id == current_user.id %>
                 <tr class="table-warning">
-                  <td colspan="2">Data: <%= transaction.created_at.strftime("%d/%m/%Y %k:%M") %></td>
+                  <td colspan="2"><strong>Data: <%= transaction.created_at.strftime("%d/%m/%Y %k:%M") %></strong></td>
                 </tr>
-                <tr>
-                  <td>Saldo anterior:</td>
-                  <td><%= number_to_currency(transaction.old_balance, :unit => "", :separator => ",", :delimiter => ".") %></td>
-                </tr>
+
+                  <tr>
+                    <td>Saldo:</td>
+                    <td><strong><%= number_to_currency(transaction.new_balance, :unit => "", :separator => ",", :delimiter => ".") %></strong></td>
+                  </tr>
                 <% if transaction.transaction_type == 'Depósito' %>
                   <tr style="color: #00C04B;">
                   <% else %>
@@ -32,25 +33,25 @@
                     <td><%= transaction.transaction_type %>:</td>
                     <td><%= number_to_currency(transaction.amount, :unit => "", :separator => ",", :delimiter => ".") %></td>
                   </tr>
-                  <tr>
-                    <td>Saldo:</td>
-                    <td><%= number_to_currency(transaction.new_balance, :unit => "", :separator => ",", :delimiter => ".") %></td>
-                  </tr>
+                <tr>
+                  <td>Saldo anterior:</td>
+                  <td><%= number_to_currency(transaction.old_balance, :unit => "", :separator => ",", :delimiter => ".") %></td>
+                </tr>
                 <% else %>
                   <tr class="table-warning">
-                    <td colspan="2">Data: <%= transaction.created_at.strftime("%d/%m/%Y %k:%M") %></td>
+                    <td colspan="2"><strong>Data: <%= transaction.created_at.strftime("%d/%m/%Y %k:%M") %></strong></td>
                   </tr>
                   <tr>
-                    <td>Saldo anterior:</td>
-                    <td><%= number_to_currency(transaction.destination_account_old_balance, :unit => "", :separator => ",", :delimiter => ".") %></td>
+                    <td>Saldo:</td>
+                    <td><strong><%= number_to_currency(transaction.destination_account_new_balance, :unit => "", :separator => ",", :delimiter => ".") %></strong></td>
                   </tr>
                   <tr style="color: #00C04B;">
                     <td><%= transaction.transaction_type %>:</td>
                     <td><%= number_to_currency(transaction.amount, :unit => "", :separator => ",", :delimiter => ".") %></td>
                   </tr>
                   <tr>
-                    <td>Saldo:</td>
-                    <td><%= number_to_currency(transaction.destination_account_new_balance, :unit => "", :separator => ",", :delimiter => ".") %></td>
+                    <td>Saldo anterior:</td>
+                    <td><%= number_to_currency(transaction.destination_account_old_balance, :unit => "", :separator => ",", :delimiter => ".") %></td>
                   </tr>
                 <% end %>
               <% end %>

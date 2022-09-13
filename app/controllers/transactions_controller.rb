@@ -10,21 +10,21 @@ class TransactionsController < ApplicationController
       init_date = Time.zone.parse(params[:init_date]).beginning_of_day
       final_date = Time.zone.parse(params[:final_date]).end_of_day
       # raise
-      @transactions = Transaction.where(sql_query, query: current_user.id, init_date:, final_date:).order(:created_at)
+      @transactions = Transaction.where(sql_query, query: current_user.id, init_date:, final_date:).order(created_at: :desc)
     elsif params[:init_date].present? && params[:final_date] == ""
       sql_query = '(user_id = :query OR destination_account_id = :query) AND created_at >= :init_date'
       init_date = Time.zone.parse(params[:init_date]).beginning_of_day
 
-      @transactions = Transaction.where(sql_query, query: current_user.id, init_date:).order(:created_at)
+      @transactions = Transaction.where(sql_query, query: current_user.id, init_date:).order(created_at: :desc)
     elsif params[:init_date] == "" && params[:final_date].present?
       sql_query = '(user_id = :query OR destination_account_id = :query) AND created_at < :final_date'
       final_date = Time.zone.parse(params[:final_date]).end_of_day
 
-      @transactions = Transaction.where(sql_query, query: current_user.id, final_date:).order(:created_at)
+      @transactions = Transaction.where(sql_query, query: current_user.id, final_date:).order(created_at: :desc)
     else
       sql_query = 'user_id = :query OR destination_account_id = :query'
 
-      @transactions = Transaction.where(sql_query, query: current_user.id).order(:created_at)
+      @transactions = Transaction.where(sql_query, query: current_user.id).order(created_at: :desc)
       # raise
     end
   end
