@@ -1,7 +1,7 @@
 
-# Bank
+# Banco Digital
 
-Application that simulates operations available at a bank teller.
+Aplição web que simula as operações disponíveis em um caixa do banco.
 
 * Ruby version
   3.1.2
@@ -12,27 +12,28 @@ Application that simulates operations available at a bank teller.
 * Postgre version
   PostgreSQL 12
 
-## 💻 How to install
+## 💻 Como instalar
 
-Clone this repository and install the dependencies with the following commands in your terminal:
+Clone este repositório e instale as dependências com os seguintes comandos em seu terminal:
 ```
 bundle install
 ```
 ```
 yarn install
 ```
-## Database creation and initialization
+## Criação e inicialização do banco de dados
 
-run in your terminal:
+Execute no seu terminal:
 ```
 rails db:create db:migrate
 ```
 
-## Run application
+## Executar aplicação
+
+Execute em 2 terminais simultaneamente:
 ```
 rails s
 ```
-and
 ```
 yarn build --watch
 ```
